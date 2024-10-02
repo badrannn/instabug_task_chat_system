@@ -231,6 +231,10 @@ GEM
       logger
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
+    sidekiq-cron (1.12.0)
+      fugit (~> 1.8)
+      globalid (>= 1.0.1)
+      sidekiq (>= 6)
     sidekiq-scheduler (5.0.6)
       rufus-scheduler (~> 3.2)
       sidekiq (>= 6, < 8)
@@ -271,6 +275,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rails (~> 7.0.8, >= 7.0.8.4)
   sidekiq
+  sidekiq-cron
   sidekiq-scheduler
   sidekiq-unique-jobs
   sinatra

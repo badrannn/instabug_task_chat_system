@@ -1,0 +1,4 @@
+# runs every 45 minutes
+count_updater:
+  cron: "*/45 * * * *"
+  class: "CountUpdaterJob"

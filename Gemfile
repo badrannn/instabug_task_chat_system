@@ -16,6 +16,7 @@ gem "elasticsearch-model"
 gem "elasticsearch-rails"
 gem "faraday-http"
 gem "faraday"
+gem "sidekiq-cron"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
