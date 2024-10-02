@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_27_213209) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_02_233940) do
   create_table "applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "token", null: false
     t.integer "chats_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "lock_version", default: 0, null: false
     t.index ["token"], name: "index_applications_on_token"
   end
 
@@ -26,6 +27,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_27_213209) do
     t.integer "messages_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "lock_version", default: 0, null: false
     t.index ["application_token", "number"], name: "index_chats_on_application_token_and_number", unique: true
     t.index ["application_token"], name: "index_chats_on_application_token"
   end
