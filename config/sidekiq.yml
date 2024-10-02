@@ -1,0 +1,4 @@
+:queues:
+  - application_creator
+  - chat_creator
+  - message_creator
