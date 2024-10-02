@@ -14,6 +14,8 @@ gem "active_model_serializers"
 gem "mysql2"
 gem "elasticsearch-model"
 gem "elasticsearch-rails"
+gem "faraday-http"
+gem "faraday"
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"

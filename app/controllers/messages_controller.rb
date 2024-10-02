@@ -34,6 +34,20 @@ class MessagesController < ApplicationController
     end
   end
 
+  def search
+    chat = Chat.find_by(application_token: params[:application_token], number: params[:chat_number])
+    if chat.present?
+      messages = chat.messages.search(params[:query])
+      if messages.any?
+        render json: messages, status: :ok
+      else
+        render json: { message: "No messages found for this query." }, status: :not_found
+      end
+    else
+      render json: { message: "Chat not found" }, status: :not_found
+    end
+  end
+
   def message_params
     params.require(:message).permit(:body)
   end
