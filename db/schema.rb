@@ -11,32 +11,35 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.0].define(version: 2024_09_27_213209) do
-  create_table "applications", force: :cascade do |t|
+  create_table "applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
-    t.string "token"
-    t.integer "chats_count"
+    t.string "token", null: false
+    t.integer "chats_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_applications_on_token"
   end
 
-  create_table "chats", force: :cascade do |t|
-    t.integer "application_id", null: false
-    t.integer "number"
-    t.integer "messages_count"
+  create_table "chats", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "application_token", null: false
+    t.integer "number", null: false
+    t.integer "messages_count", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["application_id"], name: "index_chats_on_application_id"
+    t.index ["application_token", "number"], name: "index_chats_on_application_token_and_number", unique: true
+    t.index ["application_token"], name: "index_chats_on_application_token"
   end
 
-  create_table "messages", force: :cascade do |t|
-    t.integer "chat_id", null: false
-    t.integer "number"
+  create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "application_token", null: false
+    t.integer "chat_number", null: false
+    t.integer "number", null: false
     t.text "body"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["application_token", "chat_number", "number"], name: "index_messages_on_application_token_and_chat_number_and_number", unique: true
+    t.index ["application_token", "chat_number"], name: "index_messages_on_application_token_and_chat_number"
   end
 
-  add_foreign_key "chats", "applications"
-  add_foreign_key "messages", "chats"
+  add_foreign_key "chats", "applications", column: "application_token", primary_key: "token"
 end
