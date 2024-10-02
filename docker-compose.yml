@@ -1,0 +1,82 @@
+services:
+
+  elasticsearch:
+    image: elasticsearch:8.8.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment: [ 'CLI_JAVA_OPTS=-Xms2g -Xmx2g', 'bootstrap.memory_lock=true', 'discovery.type=single-node', 'xpack.security.enabled=false', 'xpack.security.enrollment.enabled=false' ]
+    
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.7.1
+    container_name: kibana
+    environment:
+      XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY: d1a66dfd-c4d3-4a0a-8290-2abcb83ab3aa
+    ports:
+      - 5601:5601
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    container_name: redis
+    healthcheck:
+      test: [ "CMD-SHELL", "redis-cli ping | grep PONG" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    command: [ "redis-server" ]
+
+  mysql:
+    container_name: backend_db
+    volumes:
+      - my-db:/var/lib/mysql
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chat_system
+
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"show databases;\""
+      timeout: 20s
+      retries: 10
+    restart: on-failure
+
+  sidekiq:
+    build:
+      context: .
+      args:
+        SERVICE: worker
+    command: /bin/sh -c bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      redis:
+        condition: "service_healthy"
+    volumes:
+      - .:/app
+    env_file:
+      - ./docker/docker-compose.env
+
+  web:
+    container_name: backend_app
+    build:
+      context: .
+      args:
+        SERVICE: server
+    env_file:
+      - ./docker/docker-compose.env
+    ports:
+      - "3000:3000"
+    working_dir: /app
+    volumes:
+      - .:/app
+    entrypoint: [ "/usr/local/bin/entrypoint" ]
+    command: [ "rails", "server", "-b", "0.0.0.0" ]
+    depends_on:
+      mysql:
+        condition: "service_healthy"
+      redis:
+        condition: "service_healthy"
+volumes:
+  my-db:
