@@ -10,10 +10,9 @@ class ApplicationCreationJob
     application = Application.new(name: parsed_opts["name"], token: parsed_opts["token"])
 
     begin
-      if application.save
+      ActiveRecord::Base.transaction do
+        application.save!
         Rails.logger.info("Application #{application.id} created successfully.")
-      else
-        Rails.logger.error("Failed to create application: #{application.errors.full_messages.join(", ")}")
       end
     rescue StandardError => e
       Rails.logger.error("An error occurred while creating application: #{e.message}")

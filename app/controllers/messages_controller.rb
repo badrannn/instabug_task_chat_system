@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
   def create
     if Chat.exists?(application_token: params[:application_token], number: params[:chat_number])
       if Message.new(message_params).valid?
-        messages_count = Message.where(chat_number: params[:chat_number]).count
+        messages_count = Message.where(chat_number: params[:chat_number], application_token: params[:application_token]).count
         render json: { message: "Message is being created. Your message number is #{messages_count + 1}" }, status: :created
 
         opts = { "token" => params[:application_token], "chat_number" => params[:chat_number],
