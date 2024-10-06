@@ -9,7 +9,7 @@ class MessagesController < ApplicationController
                  "number" => messages_count + 1, "body" => message_params[:body] }
         MessageCreationJob.perform_async(opts.to_json)
       else
-        render json: { message: "Message body is required" }, status: :bad_request
+        render json: { message: "Message body is required" }, status: :unprocessable_entity
       end
     else
       render json: { message: "Chat not found" }, status: :not_found

@@ -10,12 +10,11 @@ services:
       - 9300:9300
     environment: [ 'CLI_JAVA_OPTS=-Xms2g -Xmx2g', 'bootstrap.memory_lock=true', 'discovery.type=single-node', 'xpack.security.enabled=false', 'xpack.security.enrollment.enabled=false' ]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=30s"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=30s" ]
       interval: 30s
       timeout: 10s
       retries: 5
 
-    
   kibana:
     image: docker.elastic.co/kibana/kibana:8.7.1
     container_name: kibana
@@ -38,6 +37,7 @@ services:
     container_name: backend_db
     volumes:
       - my-db:/var/lib/mysql
+      - ./init-db.sql:/init-db.sql
     image: mysql
     ports:
       - "3306:3306"
@@ -50,6 +50,7 @@ services:
       timeout: 20s
       retries: 10
     restart: on-failure
+    command: --init-file /init-db.sql
 
   sidekiq:
     build:

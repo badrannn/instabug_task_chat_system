@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS chat_system;
+CREATE DATABASE IF NOT EXISTS test_chat_system;

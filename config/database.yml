@@ -25,4 +25,4 @@ test:
   <<: *default
   reconnect: false
   pool: 8
-  database: <%= 'chat_system' %>
+  database: <%= 'test_chat_system' %>
