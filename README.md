@@ -276,7 +276,7 @@ In this design:
 
 
 ### Asynchronous Jobs for Database Writes
-To enhance performance and responsiveness and introduce concurrency control, the application leverages background jobs for writing to the database. This asynchronous behavior is implemented using Sidekiq.
+To enhance performance and responsiveness and introduce concurrency control, the application leverages background jobs for writing to the database. This asynchronous behavior is implemented using Sidekiq and Redis.
 
 - **ApplicationCreationJob**: 
   - Responsible for handling the creation of new application records. When an application is initiated, a job is enqueued, and the application responds immediately to the user with the token. The actual database writing occurs in the background.
@@ -299,3 +299,17 @@ To enhance performance and responsiveness and introduce concurrency control, the
    - Supports full-text search, enabling search for keywords within the message body.
 
 A **Searchable** concern was created to encapsulate the logic for indexing and searching.
+
+### Handling Race Conditions
+
+> The system is to receive many requests. It might be running on multiple servers in parallel and thus multiple requests may be processed concurrently. Make sure to handle race conditions.
+
+- **Optimistic Locking**: 
+   - This ensures that no conflicting updates occur on the same record. If the record has been modified, Rails raises an ActiveRecord::StaleObjectError exception and the update is rejected
+
+- **Database Transactions (Atomicity)**: 
+   - Transactions are used to group a set of database operations, ensuring that either all operations succeed or none at all. Ensuring that the database is in a consistent state.
+- **Job Queues for Writes**:
+   - **Sidekiq** job queues are used to handle writes asynchronously, ensuring that concurrent requests do not cause conflicts. Jobs are enqueued and processed in the order they are received **(FIFO)**.
+   - The queue-based approach introduces **concurrency control** as only one write operation can be executed at a time on the same resource.
+
