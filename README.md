@@ -1,5 +1,4 @@
-![image](https://github.com/user-attachments/assets/83a81736-bd59-438b-9921-0c580670f544)
-# Instabug chat system
+# Chat system
 
 ## **Table of Contents**
 
@@ -8,7 +7,7 @@
 3. [Implementation Discussion](#implementation-discussion)
 
 ## Overview
-This repository contains a chat system developed as a task for Instabug, utilizing Ruby on Rails and Mysql.
+This repository contains a chat system utilizing Ruby on Rails and Mysql.
 
 ![Ruby on Rails](https://img.shields.io/badge/Ruby_on_Rails-CC0000?style=for-the-badge&logo=ruby-on-rails&logoColor=white)
 ![Elasticsearch](https://img.shields.io/badge/Elasticsearch-005571?style=for-the-badge&logo=elasticsearch&logoColor=white)
